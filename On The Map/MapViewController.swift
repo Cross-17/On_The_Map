@@ -14,7 +14,6 @@ class MapViewController: UIViewController,MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
     let parse = ParseClient.sharedInstance()
-    var students : [StudentInformation] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
@@ -67,9 +66,9 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         alertWithError(error: "student data download fails", title: "ERROR")
     }
     private func addAnnotation(){
-        students = parse.data
+        mapView.removeAnnotations(mapView.annotations)
         var annotations = [MKPointAnnotation]()
-        for student in self.students {
+        for student in studentData.data {
             let lat = CLLocationDegrees(student.latitude)
             let long = CLLocationDegrees(student.longitude)
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)

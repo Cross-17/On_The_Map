@@ -36,6 +36,7 @@ class infoPostingViewController: UIViewController,MKMapViewDelegate,UITextViewDe
     
     @IBAction func experiment(_ sender: Any) {
         activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         let searchString = middleText.text
         let geo = CLGeocoder()
         geo.geocodeAddressString(searchString!){ (result,error) in
@@ -75,7 +76,6 @@ class infoPostingViewController: UIViewController,MKMapViewDelegate,UITextViewDe
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
-        
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
@@ -106,6 +106,9 @@ class infoPostingViewController: UIViewController,MKMapViewDelegate,UITextViewDe
     
     @IBAction func submit(_ sender: Any) {
         mediaURL = topTextView.text
+        if !(mediaURL?.contains("http"))!{
+            alertWithError("Please include http", "Invalid URL!")
+        }else{
         var param : [String:Any] = [:]
         param["mapString"] = mapString
         param["mediaURL"] = mediaURL
@@ -122,7 +125,7 @@ class infoPostingViewController: UIViewController,MKMapViewDelegate,UITextViewDe
                         performUIUpdatesOnMain{
                         if let errorString = errorString{
                             self.alertWithError(errorString, "ERROR")
-                            }}}}}}}
+                            }}}}}}}}
     
     
     private func alertWithError(_ error: String,_ title: String) {

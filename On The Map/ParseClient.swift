@@ -8,10 +8,9 @@
 
 import Foundation
 class ParseClient:Client{
-    var data :[StudentInformation] = []
     
     func getStudents(completionHandler: @escaping (_ success: Bool, _ errorString: String?) -> Void){
-       let request =  getParseRequestUrl("https://parse.udacity.com/parse/classes/StudentLocation?limit=100")
+       let request =  getParseRequestUrl("https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt")
        let _ =  requestWithUdacity(request: request as URLRequest,true){ (result,error) in
             if let error = error{
                 completionHandler(false,String(describing: error))
@@ -19,7 +18,7 @@ class ParseClient:Client{
                 if let result = result as? [String:[[String:Any]]]{
                     for record in result["results"]!{
                         let temp = StudentInformation(record)
-                        self.data.append(temp)
+                        studentData.data.append(temp)
                 }
                     completionHandler(true,nil)
                 }}}}
@@ -31,7 +30,6 @@ class ParseClient:Client{
         parameter["firstName"] = udacityClient.first_name
         parameter["lastName"] = udacityClient.last_name
         let request =  getParseRequestUrl("https://parse.udacity.com/parse/classes/StudentLocation",parameter,true)
- //       request.httpMethod = "POST"
         let _ = requestWithUdacity(request: request, true){ (result,error) in
             if error != nil{
                 completionHandler(false,"Posting Fail")
